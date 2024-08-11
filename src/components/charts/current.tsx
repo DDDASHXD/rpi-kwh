@@ -3,6 +3,7 @@ import InfoBox from "./info-box";
 import { ZapIcon } from "lucide-react";
 import { iKwh } from "@/helpers/getkwh";
 import { cn } from "@/lib/utils";
+import { useTheme } from "next-themes";
 
 interface iCurrentProps {
   data: iKwh[];
@@ -10,6 +11,7 @@ interface iCurrentProps {
 
 const Current = ({ data }: iCurrentProps) => {
   const [priceNow, setPriceNow] = React.useState<number | null>(null);
+  const { resolvedTheme } = useTheme();
 
   React.useEffect(() => {
     const currentHour = new Date().getHours();
@@ -37,17 +39,20 @@ const Current = ({ data }: iCurrentProps) => {
         <p>Right now</p>
         <div
           className={cn(
-            "flex items-center justify-center size-4 rounded-full bg-green-500 text-black",
+            "flex items-center justify-center size-5 rounded-full bg-green-500 dark:text-black text-white",
             {
               "bg-yellow-500": priceNow! > 1.5,
               "bg-red-500": priceNow! > 2
             }
           )}
           style={{
-            padding: 2
+            padding: 3
           }}
         >
-          <ZapIcon strokeWidth={0} fill="black" />
+          <ZapIcon
+            strokeWidth={0}
+            fill={resolvedTheme === "dark" ? "#000000" : "#ffffff"}
+          />
         </div>
       </div>
     </InfoBox>

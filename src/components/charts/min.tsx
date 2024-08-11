@@ -34,7 +34,7 @@ const Min = ({ data }: iMinProps) => {
         </p>
         <div
           className={cn(
-            "flex items-center justify-center size-4 rounded-full bg-green-500/20 text-green-500",
+            "flex items-center justify-center size-5 rounded-full bg-green-500/20 text-green-500",
             {
               "bg-yellow-500/20 text-yellow-500": min > 1.5,
               "bg-red-500/20 text-red-500": min > 2
