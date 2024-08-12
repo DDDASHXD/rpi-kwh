@@ -18,12 +18,14 @@ import { useTheme } from "next-themes";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "./ui/badge";
 import { toast } from "sonner";
+import NumberInput from "./ui/number-input";
 
 const Settings = () => {
   const [desiredTheme, setDesiredTheme] = React.useState("");
   const [sleepPrevention, setSleepPrevention] = React.useState(false);
   const [hideCursor, setHideCursor] = React.useState(true);
   const [wakeLock, setWakeLock] = React.useState(false);
+  const [tax, setTax] = React.useState(12);
   const { setTheme } = useTheme();
 
   const getTheme = () => {
@@ -77,6 +79,12 @@ const Settings = () => {
     }
 
     setHideCursor(localHideCursor);
+
+    let localTax = localStorage.getItem("electricityTax");
+
+    if (localTax !== undefined) {
+      setTax(Number(localTax));
+    }
   }, []);
 
   React.useEffect(() => {
@@ -93,39 +101,9 @@ const Settings = () => {
     localStorage.setItem("hideCursor", JSON.stringify(hideCursor));
   }, [hideCursor]);
 
-  const handleWakeLock = async (enable: boolean) => {
-    if (!enable) {
-      // If the wakelock should be disabled, release it
-      if (navigator.wakeLock && navigator.wakeLock.release) {
-        await navigator.wakeLock.release();
-        setWakeLock(false);
-        toast.info("Screen wake lock released");
-      }
-      return;
-    }
-
-    setWakeLock(true);
-    console.log("Attempting to request wake lock");
-
-    if ("wakeLock" in navigator) {
-      try {
-        const wakeLock = await navigator.wakeLock.request("screen");
-        toast.success("Waking screen");
-
-        // Optionally: Store the wakeLock object if you want to release it later
-        wakeLock.addEventListener("release", () => {
-          setWakeLock(false);
-          toast.info("Screen wake lock released");
-        });
-      } catch (error) {
-        console.error(error);
-        toast.error("An error occurred. Check console.");
-        setWakeLock(false);
-      }
-    } else {
-      toast.error("Wake Lock API not supported in this browser.");
-      setWakeLock(false);
-    }
+  const handleTaxChange = (e: number) => {
+    localStorage.setItem("electricityTax", e.toString());
+    setTax(e);
   };
 
   return (
@@ -184,13 +162,10 @@ const Settings = () => {
           </div>
           <div className="flex justify-between items-center">
             <div className="flex gap-2">
-              <p>Wake lock</p>
+              <p>Taxes</p>
               <Badge variant="secondary">Experimental</Badge>
             </div>
-            <Switch
-              checked={wakeLock}
-              onCheckedChange={(e) => handleWakeLock(e)}
-            />
+            <NumberInput value={tax} onChange={(e) => handleTaxChange(e)} />
           </div>
         </div>
         <DrawerFooter className="flex flex-row justify-center">

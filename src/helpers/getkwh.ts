@@ -38,12 +38,21 @@ export function formatDate(date: Date) {
 }
 
 export const getKwh = async () => {
+  let localElectricityTax = localStorage.getItem("electricityTax");
+
+  if (localElectricityTax === null) {
+    localStorage.setItem("electricityTax", "0");
+    localElectricityTax = "0";
+  }
+
+  console.log("localElectricityTax", localElectricityTax);
+
   const date = new Date();
   const res = await axios.get(
     getCall(
       String(date.getFullYear()),
       String(date.getMonth() + 1).padStart(2, "0"),
-      String(date.getDate()).padStart(2, "0"),
+      String(date.getDate() - 1).padStart(2, "0"),
       "DK2"
     )
   );
@@ -53,12 +62,18 @@ export const getKwh = async () => {
     String(date.getMonth() + 1).padStart(2, "0"),
     String(date.getDate()).padStart(2, "0")
   );
-  const data = res.data;
+  let data = res.data;
+
+  console.log("data", data);
+
+  data.DKK_per_kWh;
 
   const newData = data.map((item: iResponse, index: number) => {
     return {
       id: index,
-      price: Number((Number(item.DKK_per_kWh) * 2.3).toFixed(2)),
+      price: Number(
+        Number((item.DKK_per_kWh += Number(localElectricityTax))).toFixed(2)
+      ),
       time_start: formatDate(new Date(item.time_start)),
       time_end: new Date(item.time_end)
     };
