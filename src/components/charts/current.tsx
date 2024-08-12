@@ -27,8 +27,8 @@ const Current = ({ data }: iCurrentProps) => {
       value={
         <p
           className={cn("text-green-500", {
-            "text-yellow-500": priceNow! > 1.5,
-            "text-red-500": priceNow! > 2
+            "text-yellow-500": priceNow! > 2.01,
+            "text-red-500": priceNow! > 2.5
           })}
         >
           {priceNow ? priceNow : "Not found"}
@@ -41,8 +41,8 @@ const Current = ({ data }: iCurrentProps) => {
           className={cn(
             "flex items-center justify-center size-5 rounded-full bg-green-500 dark:text-black text-white",
             {
-              "bg-yellow-500": priceNow! > 1.5,
-              "bg-red-500": priceNow! > 2
+              "bg-yellow-500": priceNow! > 2.01,
+              "bg-red-500": priceNow! > 2.5
             }
           )}
           style={{

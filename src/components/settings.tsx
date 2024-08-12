@@ -12,13 +12,18 @@ import {
   DrawerTrigger
 } from "@/components/ui/drawer";
 import { Button } from "./ui/button";
-import { SettingsIcon } from "lucide-react";
+import { CircleHelp, SettingsIcon } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTheme } from "next-themes";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "./ui/badge";
 import { toast } from "sonner";
 import NumberInput from "./ui/number-input";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger
+} from "@/components/ui/hover-card";
 
 const Settings = () => {
   const [desiredTheme, setDesiredTheme] = React.useState("");
@@ -147,7 +152,17 @@ const Settings = () => {
             </Tabs>
           </div>
           <div className="flex justify-between items-center">
-            <p>Sleep prevention</p>
+            <div className="flex gap-1 items-center">
+              <p>Show last updated</p>
+              <HoverCard openDelay={0}>
+                <HoverCardTrigger>
+                  <CircleHelp size={16} />
+                </HoverCardTrigger>
+                <HoverCardContent>
+                  Shows a text explaining when the data was last updated
+                </HoverCardContent>
+              </HoverCard>
+            </div>
             <Switch
               checked={sleepPrevention}
               onClick={() => setSleepPrevention(!sleepPrevention)}

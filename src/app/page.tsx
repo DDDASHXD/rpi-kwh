@@ -13,6 +13,7 @@ import SleepPrevention from "@/components/ui/sleep-prevention";
 
 const Home = () => {
   const [data, setData] = React.useState<iKwh[] | null>(null);
+  const [lastUpdated, setLastUpdated] = React.useState<Date | null>(null);
   const { setTheme } = useTheme();
 
   const getData = async () => {
@@ -37,6 +38,7 @@ const Home = () => {
   React.useEffect(() => {
     const theme = localStorage.getItem("theme");
     getData();
+    setLastUpdated(new Date());
 
     switch (theme) {
       case "dynamic":
@@ -55,6 +57,7 @@ const Home = () => {
 
     const interval = setInterval(() => {
       getData();
+      setLastUpdated(new Date());
       if (theme === "dynamic") {
         getTheme();
       }
@@ -92,7 +95,7 @@ const Home = () => {
       <div className="flex items-center justify-between">
         <Settings />
         <div className="flex items-center gap-2">
-          <SleepPrevention />
+          <SleepPrevention lastUpdated={lastUpdated} />
         </div>
       </div>
     </div>

@@ -41,9 +41,9 @@ const DefaultChart = ({ data }: iDefaultChartProps) => {
             <Cell
               key={`cell-${index}`}
               fill={
-                entry.price > 2
+                entry.price > 2.5
                   ? "#F56565"
-                  : entry.price > 1.5
+                  : entry.price > 2.01
                   ? "#ECC94B"
                   : "#48BB78"
               }

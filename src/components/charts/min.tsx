@@ -36,8 +36,8 @@ const Min = ({ data }: iMinProps) => {
           className={cn(
             "flex items-center justify-center size-5 rounded-full bg-green-500/20 text-green-500",
             {
-              "bg-yellow-500/20 text-yellow-500": min > 1.5,
-              "bg-red-500/20 text-red-500": min > 2
+              "bg-yellow-500/20 text-yellow-500": min > 2.01,
+              "bg-red-500/20 text-red-500": min > 2.5
             }
           )}
           style={{
