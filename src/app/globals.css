@@ -68,6 +68,18 @@
   }
 }
 
-* {
-  cursor: none;
+body.hide-cursor {
+  cursor: none !important;
+}
+
+body.hide-cursor > * {
+  cursor: none !important;
+}
+
+body.hide-cursor > * > * {
+  cursor: none !important;
+}
+
+body.hide-cursor * {
+  cursor: none !important;
 }

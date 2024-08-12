@@ -7,11 +7,12 @@ const SleepPrevention = () => {
   const [enabled, setEnabled] = React.useState(false);
 
   React.useEffect(() => {
-    let local = Boolean(localStorage.getItem("sleepPrevention"));
+    setTimeout(() => {
+      let local = localStorage.getItem("sleepPrevention");
+      setEnabled(local === "true" ? true : false);
 
-    if (local) {
-      setEnabled(local);
-    }
+      console.log("local", local);
+    }, 50);
   }, []);
 
   return (

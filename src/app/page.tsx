@@ -65,8 +65,20 @@ const Home = () => {
     };
   }, []);
 
+  React.useEffect(() => {
+    setTimeout(() => {
+      let localHideCursor = localStorage.getItem("hideCursor");
+
+      if (localHideCursor === "true") {
+        document.body.classList.add("hide-cursor");
+      } else {
+        document.body.classList.remove("hide-cursor");
+      }
+    }, 50);
+  }, []);
+
   return (
-    <div className="w-screen h-screen p-10 flex flex-col cursor-none">
+    <div className="w-screen h-screen p-10 flex flex-col">
       {data && (
         <>
           <div className="flex gap-5">

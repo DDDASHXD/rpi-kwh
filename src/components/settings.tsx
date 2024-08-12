@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import {
   Drawer,
@@ -14,10 +16,14 @@ import { SettingsIcon } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTheme } from "next-themes";
 import { Switch } from "@/components/ui/switch";
+import { Badge } from "./ui/badge";
+import { toast } from "sonner";
 
 const Settings = () => {
   const [desiredTheme, setDesiredTheme] = React.useState("");
   const [sleepPrevention, setSleepPrevention] = React.useState(false);
+  const [hideCursor, setHideCursor] = React.useState(true);
+  const [wakeLock, setWakeLock] = React.useState(false);
   const { setTheme } = useTheme();
 
   const getTheme = () => {
@@ -42,14 +48,35 @@ const Settings = () => {
 
     setDesiredTheme(localTheme);
 
-    let localSleepPrevention = Boolean(localStorage.getItem("sleepPrevention"));
+    const toParseSleep = localStorage.getItem("sleepPrevention");
+    let localSleepPrevention = undefined;
+    if (toParseSleep) {
+      localSleepPrevention = JSON.parse(toParseSleep);
+    }
 
-    if (!localSleepPrevention) {
+    console.log(localSleepPrevention);
+
+    if (localSleepPrevention === undefined) {
       localStorage.setItem("sleepPrevention", "false");
       localSleepPrevention = false;
     }
 
     setSleepPrevention(localSleepPrevention);
+
+    const toParseCursor = localStorage.getItem("hideCursor");
+    let localHideCursor = undefined;
+    if (toParseCursor) {
+      localHideCursor = JSON.parse(toParseCursor);
+    }
+
+    console.log("localHideCursor", localHideCursor);
+
+    if (localHideCursor === undefined) {
+      localStorage.setItem("hideCursor", "true");
+      localHideCursor = true;
+    }
+
+    setHideCursor(localHideCursor);
   }, []);
 
   React.useEffect(() => {
@@ -61,6 +88,45 @@ const Settings = () => {
   React.useEffect(() => {
     localStorage.setItem("sleepPrevention", JSON.stringify(sleepPrevention));
   }, [sleepPrevention]);
+
+  React.useEffect(() => {
+    localStorage.setItem("hideCursor", JSON.stringify(hideCursor));
+  }, [hideCursor]);
+
+  const handleWakeLock = async (enable: boolean) => {
+    if (!enable) {
+      // If the wakelock should be disabled, release it
+      if (navigator.wakeLock && navigator.wakeLock.release) {
+        await navigator.wakeLock.release();
+        setWakeLock(false);
+        toast.info("Screen wake lock released");
+      }
+      return;
+    }
+
+    setWakeLock(true);
+    console.log("Attempting to request wake lock");
+
+    if ("wakeLock" in navigator) {
+      try {
+        const wakeLock = await navigator.wakeLock.request("screen");
+        toast.success("Waking screen");
+
+        // Optionally: Store the wakeLock object if you want to release it later
+        wakeLock.addEventListener("release", () => {
+          setWakeLock(false);
+          toast.info("Screen wake lock released");
+        });
+      } catch (error) {
+        console.error(error);
+        toast.error("An error occurred. Check console.");
+        setWakeLock(false);
+      }
+    } else {
+      toast.error("Wake Lock API not supported in this browser.");
+      setWakeLock(false);
+    }
+  };
 
   return (
     <Drawer>
@@ -107,6 +173,23 @@ const Settings = () => {
             <Switch
               checked={sleepPrevention}
               onClick={() => setSleepPrevention(!sleepPrevention)}
+            />
+          </div>
+          <div className="flex justify-between items-center">
+            <p>Hide cursor</p>
+            <Switch
+              checked={hideCursor}
+              onCheckedChange={(e) => setHideCursor(e)}
+            />
+          </div>
+          <div className="flex justify-between items-center">
+            <div className="flex gap-2">
+              <p>Wake lock</p>
+              <Badge variant="secondary">Experimental</Badge>
+            </div>
+            <Switch
+              checked={wakeLock}
+              onCheckedChange={(e) => handleWakeLock(e)}
             />
           </div>
         </div>
