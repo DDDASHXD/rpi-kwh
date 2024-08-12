@@ -8,6 +8,8 @@ import Min from "@/components/charts/min";
 import Current from "@/components/charts/current";
 import Max from "@/components/charts/max";
 import { useTheme } from "next-themes";
+import Settings from "@/components/settings";
+import SleepPrevention from "@/components/ui/sleep-prevention";
 
 const Home = () => {
   const [data, setData] = React.useState<iKwh[] | null>(null);
@@ -33,12 +35,29 @@ const Home = () => {
   };
 
   React.useEffect(() => {
+    const theme = localStorage.getItem("theme");
     getData();
-    getTheme();
+
+    switch (theme) {
+      case "dynamic":
+        getTheme();
+        break;
+      case "dark":
+        setTheme("dark");
+        break;
+      case "light":
+        setTheme("light");
+        break;
+      default:
+        setTheme("dark");
+        break;
+    }
 
     const interval = setInterval(() => {
       getData();
-      getTheme();
+      if (theme === "dynamic") {
+        getTheme();
+      }
     }, 10 * 60 * 1000);
 
     return () => {
@@ -58,6 +77,12 @@ const Home = () => {
           <DefaultChart data={data} />
         </>
       )}
+      <div className="flex items-center justify-between">
+        <Settings />
+        <div className="flex items-center gap-2">
+          <SleepPrevention />
+        </div>
+      </div>
     </div>
   );
 };
