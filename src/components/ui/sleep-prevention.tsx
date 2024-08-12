@@ -6,19 +6,17 @@ import React from "react";
 const SleepPrevention = () => {
   const [enabled, setEnabled] = React.useState(false);
 
-  React.useState(() => {
+  React.useEffect(() => {
     let local = Boolean(localStorage.getItem("sleepPrevention"));
 
     if (local) {
       setEnabled(local);
     }
-  }, [])
+  }, []);
 
   return (
     <div>
-      {enabled && (
-        <Loader2 className="animate-spin text-muted-foreground" />
-      )}
+      {enabled && <Loader2 className="animate-spin text-muted-foreground" />}
     </div>
   );
 };
