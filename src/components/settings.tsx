@@ -58,6 +58,10 @@ const Settings = () => {
     }
   }, [desiredTheme]);
 
+  React.useEffect(() => {
+    localStorage.setItem("sleepPrevention", JSON.stringify(sleepPrevention));
+  }, [sleepPrevention]);
+
   return (
     <Drawer>
       <DrawerTrigger asChild>
@@ -100,7 +104,10 @@ const Settings = () => {
           </div>
           <div className="flex justify-between items-center">
             <p>Sleep prevention</p>
-            <Switch value={sleepPrevention} onClick={() => setSleepPrevention(!sleepPrevention)}/>
+            <Switch
+              checked={sleepPrevention}
+              onClick={() => setSleepPrevention(!sleepPrevention)}
+            />
           </div>
         </div>
         <DrawerFooter className="flex flex-row justify-center">
