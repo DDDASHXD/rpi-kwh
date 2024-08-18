@@ -32,7 +32,7 @@ const SleepPrevention = ({ lastUpdated }: iSleepPreventionProps) => {
       currentDate.getTime() - pastDateTime.getTime();
     const diffInMinutes: number = Math.floor(diffInMilliseconds / (1000 * 60));
 
-    if (diffInMinutes < 0.02) {
+    if (diffInMinutes < 1) {
       return "Last updated: just now";
     } else if (diffInMinutes === 1) {
       return "Last updated: 1 minute ago";
@@ -57,7 +57,13 @@ const SleepPrevention = ({ lastUpdated }: iSleepPreventionProps) => {
 
   React.useEffect(() => {
     if (lastUpdated) {
-      setString(timeSinceDate(lastUpdated));
+      let interval = setInterval(() => {
+        setString(timeSinceDate(lastUpdated));
+      }, 1000);
+
+      return () => {
+        clearInterval(interval);
+      };
     }
   }, [lastUpdated]);
 

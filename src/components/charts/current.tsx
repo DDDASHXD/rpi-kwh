@@ -31,7 +31,7 @@ const Current = ({ data }: iCurrentProps) => {
             "text-red-500": priceNow! > 2.5
           })}
         >
-          {priceNow ? priceNow : "Not found"}
+          {priceNow ? `${priceNow} kr` : "Not found"}
         </p>
       }
     >

@@ -4,10 +4,11 @@ import { MinusIcon, PlusIcon, RefreshCcw } from "lucide-react";
 
 interface iNumberInputProps {
   onChange?: (e: number) => void;
+  step?: number;
   value?: number;
 }
 
-const NumberInput = ({ onChange, value }: iNumberInputProps) => {
+const NumberInput = ({ onChange, value, step }: iNumberInputProps) => {
   const [numValue, setNumValue] = React.useState(0);
 
   React.useEffect(() => {
@@ -17,7 +18,12 @@ const NumberInput = ({ onChange, value }: iNumberInputProps) => {
   }, [value]);
 
   const handleMinus = () => {
-    const newValue = Number((numValue - 0.01).toFixed(3));
+    let newValue;
+    if (step) {
+      newValue = Number((numValue - step).toFixed(3));
+    } else {
+      newValue = Number((numValue - 0.01).toFixed(3));
+    }
     if (onChange) {
       onChange(newValue);
     }
@@ -26,7 +32,13 @@ const NumberInput = ({ onChange, value }: iNumberInputProps) => {
   };
 
   const handlePlus = () => {
-    const newValue = Number((numValue + 0.01).toFixed(3));
+    let newValue;
+    if (step) {
+      newValue = Number((numValue + step).toFixed(3));
+    } else {
+      newValue = Number((numValue + 0.01).toFixed(3));
+    }
+
     if (onChange) {
       onChange(newValue);
     }
@@ -46,7 +58,7 @@ const NumberInput = ({ onChange, value }: iNumberInputProps) => {
     <div className="flex gap-[2px]">
       <Button
         variant="secondary"
-        className="rounded-tr-none rounded-br-none p-1 h-max border-r"
+        className="rounded-tr-none rounded-br-none p-1 h-max"
         onClick={() => handleMinus()}
       >
         <MinusIcon />
@@ -58,7 +70,7 @@ const NumberInput = ({ onChange, value }: iNumberInputProps) => {
       />
       <Button
         variant="secondary"
-        className="rounded-tl-none rounded-bl-none p-1 h-max border-r"
+        className="rounded-tl-none rounded-bl-none p-1 h-max"
         onClick={() => handlePlus()}
       >
         <PlusIcon />

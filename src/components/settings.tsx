@@ -30,7 +30,9 @@ const Settings = () => {
   const [sleepPrevention, setSleepPrevention] = React.useState(false);
   const [hideCursor, setHideCursor] = React.useState(true);
   const [wakeLock, setWakeLock] = React.useState(false);
-  const [tax, setTax] = React.useState(12);
+  const [tax, setTax] = React.useState(1.5);
+  const [yellowThreshold, setYellowThreshold] = React.useState(2.5);
+  const [redThreshold, setRedThreshold] = React.useState(3);
   const { setTheme } = useTheme();
 
   const getTheme = () => {
@@ -90,6 +92,20 @@ const Settings = () => {
     if (localTax !== undefined) {
       setTax(Number(localTax));
     }
+
+    let localRedTreshold = localStorage.getItem("redThreshold");
+    if (localRedTreshold !== undefined) {
+      setRedThreshold(Number(localRedTreshold));
+    } else {
+      localStorage.setItem("redThreshold", "0");
+    }
+
+    let localYellowThreshold = localStorage.getItem("yellowThreshold");
+    if (localYellowThreshold !== undefined) {
+      setYellowThreshold(Number(localYellowThreshold));
+    } else {
+      localStorage.setItem("yellowThreshold", "0");
+    }
   }, []);
 
   React.useEffect(() => {
@@ -111,8 +127,13 @@ const Settings = () => {
     setTax(e);
   };
 
+  React.useEffect(() => {
+    localStorage.setItem("yellowThreshold", yellowThreshold.toString());
+    localStorage.setItem("redThreshold", redThreshold.toString());
+  }, [redThreshold, yellowThreshold]);
+
   return (
-    <Drawer>
+    <Drawer shouldScaleBackground>
       <DrawerTrigger asChild>
         <Button variant="secondary">
           <SettingsIcon />
@@ -180,7 +201,31 @@ const Settings = () => {
               <p>Taxes</p>
               <Badge variant="secondary">Experimental</Badge>
             </div>
-            <NumberInput value={tax} onChange={(e) => handleTaxChange(e)} />
+            <NumberInput
+              value={tax}
+              onChange={(e) => handleTaxChange(e)}
+              step={0.1}
+            />
+          </div>
+          <div className="flex justify-between items-center">
+            <div className="flex gap-2">
+              <p>Yellow threshold</p>
+            </div>
+            <NumberInput
+              value={yellowThreshold}
+              onChange={(e) => setYellowThreshold(e)}
+              step={0.1}
+            />
+          </div>
+          <div className="flex justify-between items-center">
+            <div className="flex gap-2">
+              <p>Red threshold</p>
+            </div>
+            <NumberInput
+              value={redThreshold}
+              onChange={(e) => setRedThreshold(e)}
+              step={0.1}
+            />
           </div>
         </div>
         <DrawerFooter className="flex flex-row justify-center">

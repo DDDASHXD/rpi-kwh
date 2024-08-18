@@ -27,6 +27,18 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 const DefaultChart = ({ data }: iDefaultChartProps) => {
+  const [thresholds, setThresholds] = React.useState({ red: 0, yellow: 0 });
+
+  React.useEffect(() => {
+    const yellowThreshold = localStorage.getItem("yellowThreshold");
+    const redThreshold = localStorage.getItem("redThreshold");
+
+    if (yellowThreshold && redThreshold) {
+      // @ts-ignore
+      setThresholds({ red: redThreshold, yellow: yellowThreshold });
+    }
+  }, []);
+
   return (
     <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
       <BarChart data={data}>
@@ -41,9 +53,9 @@ const DefaultChart = ({ data }: iDefaultChartProps) => {
             <Cell
               key={`cell-${index}`}
               fill={
-                entry.price > 2.5
+                entry.price > thresholds.red
                   ? "#F56565"
-                  : entry.price > 2.01
+                  : entry.price > thresholds.yellow
                   ? "#ECC94B"
                   : "#48BB78"
               }
