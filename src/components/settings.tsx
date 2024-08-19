@@ -146,6 +146,16 @@ const Settings = () => {
             Setup basic functions
           </DrawerDescription>
         </DrawerHeader>
+        <p className="absolute bottom-5 right-5 pointer-events-none">
+          <a href="https://www.elprisenligenu.dk">
+            <img
+              src="https://ik.imagekit.io/ajdfkwyt/hva-koster-strommen/elpriser-leveret-af-elprisenligenu_LJNbbujZAX.png"
+              alt="Elpriser leveret af Elprisen lige nu.dk"
+              width="200"
+              height="45"
+            />
+          </a>
+        </p>
         <div className="flex flex-col min-w-[30rem] m-auto px-5 py-5 gap-5">
           <div className="flex justify-between items-center">
             <p className="w-full">Dark mode</p>
