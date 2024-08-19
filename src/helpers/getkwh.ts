@@ -37,7 +37,7 @@ export function formatDate(date: Date) {
   return `${hours}`;
 }
 
-export const getKwh = async () => {
+export const getKwh = async (day?: number) => {
   let localElectricityTax = localStorage.getItem("electricityTax");
 
   if (localElectricityTax === null) {
@@ -48,11 +48,12 @@ export const getKwh = async () => {
   console.log("localElectricityTax", localElectricityTax);
 
   const date = new Date();
+  console.log("date", date.getDate() - 1);
   const res = await axios.get(
     getCall(
       String(date.getFullYear()),
       String(date.getMonth() + 1).padStart(2, "0"),
-      String(date.getDate() - 1).padStart(2, "0"),
+      String(date.getDate() + (day ? day : 0)).padStart(2, "0"),
       "DK2"
     )
   );

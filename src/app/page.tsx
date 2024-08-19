@@ -10,14 +10,17 @@ import Max from "@/components/charts/max";
 import { useTheme } from "next-themes";
 import Settings from "@/components/settings";
 import SleepPrevention from "@/components/ui/sleep-prevention";
+import DateSelector from "@/components/ui/dateselector";
+import { useKwh } from "@/providers/kwhProvider";
 
 const Home = () => {
   const [data, setData] = React.useState<iKwh[] | null>(null);
   const [lastUpdated, setLastUpdated] = React.useState<Date | null>(null);
+  const { day, setDay } = useKwh();
   const { setTheme } = useTheme();
 
   const getData = async () => {
-    const newData = await getKwh();
+    const newData = await getKwh(day ? day : 0);
     console.log(newData);
 
     setData(newData);
@@ -66,7 +69,7 @@ const Home = () => {
     return () => {
       clearInterval(interval);
     };
-  }, []);
+  }, [day]);
 
   React.useEffect(() => {
     setTimeout(() => {
@@ -94,6 +97,7 @@ const Home = () => {
       )}
       <div className="flex items-center justify-between">
         <Settings />
+        <DateSelector />
         <div className="flex items-center gap-2">
           <SleepPrevention lastUpdated={lastUpdated} />
         </div>
